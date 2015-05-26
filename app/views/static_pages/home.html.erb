@@ -1,12 +1,14 @@
-<class="center hero-unit">
+<% provide(:title, 'Home')%>
+<div class="center hero-unit">
   <h1>Welcome to the Sample App</h1>
 
     <h2>
-      このサイトは、Ruby on Rails を勉強するためのサイトだよ<br>
+      このサイトは、Ruby on Rails を勉強するためのサンプルサイトだよ<br>
       <%= link_to "babyloos.netを是非どうぞ", 'http://babyloos.net' %>
     </h2>
 
-      <%= link_to "Sign up now!", signup_path, class: "btn btn-large btn-primary" %>
-    </div>
+      <%= link_to "Sign up now!", signup_path, class: "btn btn-large btn-primary center" %>
 
+</div>
 <%= link_to image_tag("rails.png", alt: "Rails"), 'http://rubyonrails.org/' %>
+<%= link_to image_tag("http://i1.wp.com/thailog.net/wp-content/uploads/2015/01/1851a5c5077f50bbd0cea5c77cf28b37.jpg?fit=500%2C300", alt: "Rails"), 'http://rubyonrails.org/' %>
