@@ -57,30 +57,52 @@ describe User do
   end
 
   describe "return value of authenticate method" do
-    # 事前にデータベースに登録
-    before { @user.save }
-    # ユーザー検索
-    let(:found_user) { User.find_by(email: @user.email) }
+      # 事前にデータベースに登録
+      before { @user.save }
+      # ユーザー検索
+      let(:found_user) { User.find_by(email: @user.email) }
 
-    # データベースの該当ユーザーのパスワードと入力したパスワードが正しい場合
-    describe "with valid password" do
-      it { should eq found_user.authenticate(@user.password) }
-    end
+      # データベースの該当ユーザーのパスワードと入力したパスワードが正しい場合
+      describe "with valid password" do
+        it { should eq found_user.authenticate(@user.password) }
+      end
 
-    # 正しくない場合
-    describe "with invalid password" do
-      let(:user_for_invalid_password) { found_user.authenticate("invalid") }
+      # 正しくない場合
+      describe "with invalid password" do
+        let(:user_for_invalid_password) { found_user.authenticate("invalid") }
 
-      it { should_not eq user_for_invalid_password }
-      # specify は it と同義
-      specify { expect(user_for_invalid_password).to be_false }
-    end
+        it { should_not eq user_for_invalid_password }
+        # specify は it と同義
+        specify { expect(user_for_invalid_password).to be_false }
+      end
 
-    # パスワードは６文字以上じゃないとダメです
-    describe "with a password that's too short" do
-      before { @user.password = @user.password_confirmation = "a" * 5 }
-      it { should be_invalid }
+      # パスワードは６文字以上じゃないとダメです
+      describe "with a password that's too short" do
+        before { @user.password = @user.password_confirmation = "a" * 5 }
+        it { should be_invalid }
+      end
+  end
+
+  describe "email address with mixed case" do
+    let(:mixed_case_email) { "Foo@EsdaTGsT.CoM" }
+
+    it "should be saved as all lower-case" do
+      @user.email = mixed_case_email
+      @user.save
+      expect(@user.reload.email).to eq mixed_case_email.downcase
     end
   end
 
+  # メールアドレスの形式が正しいかどうか
+  describe "when email format is invalid" do
+    it "should be invalid" do
+      addresses = %w[user@foo,com user_at_foo.org example.user@foo.
+                                       foo@bar_baz.com foo@bar+baz.com foo@badsa..com]
+      addresses.each do |invalid_address|
+        @user.email = invalid_address
+        expect(@user).not_to be_valid
+      end
+    end
+  end
 end
+
