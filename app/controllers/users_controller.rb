@@ -10,6 +10,7 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)    # 実装は終わっていないことに注意!
     if @user.save
+      sign_in @user
       # 保存の成功をここで扱う。
       flash[:success] = "Welcome to sample app!!"
       redirect_to @user
